@@ -19,17 +19,17 @@ from queue import Llamada, ColaCallCenter
 import os 
 
 def main():
-    conmutador = None
+    sistema = None
     opcion = 0
     
     while opcion != 8:
         print("******** Centro de Atención Telefónica - Disnorte-Dissur ********")
-        print("1. Iniciar Conmutador de Llamadas")
+        print("1. Iniciar Sistema de Llamadas")
         print("2. Registrar Llamada Entrante (Ingreso de NISS)")
         print("3. Atender Siguiente Llamada")
         print("4. Consultar Próxima Llamada en Espera")
         print("5. Consultar Total de Clientes en Espera")
-        print("6. Verificar Estado del Conmutador")
+        print("6. Verificar si hay Llamadas en Espera")
         print("7. Finalizar Todas las Llamadas en Espera")
         print("8. Salir")
         print("*****************************************************************")
@@ -41,57 +41,57 @@ def main():
         
         match opcion:
             case 1:
-                conmutador = ColaCallCenter()
-                print("Conmutador de llamadas iniciado correctamente. Listo para recibir llamadas.\n")
+                sistema = ColaCallCenter()
+                print("Sistema de llamadas iniciado correctamente. Listo para recibir llamadas.\n")
             case 2:
-                if conmutador is None:
-                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
+                if sistema is None:
+                    print("El sistema de llamadas no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
                     niss = input("Digite el número NISS del cliente: ").strip()
                     if not niss:
                         print("Error: El número NISS no puede estar vacío.\n")
                     else:
                         llamada = Llamada(niss)
-                        conmutador.encolarLlamada(llamada)
+                        sistema.encolarLlamada(llamada)
                         print(f"Llamada con NISS [{niss}] registrada exitosamente en espera de atención.\n")
             case 3:
-                if conmutador is None:
-                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
+                if sistema is None:
+                    print("El sistema de llamadas no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    llamada = conmutador.atenderSiguienteLlamada()
+                    llamada = sistema.atenderSiguienteLlamada()
                     if llamada is None:
                         print("No hay llamadas en espera en este momento.\n")
                     else:
                         print(f"Llamada atendida: [NISS: {llamada.niss} | Motivo: {llamada.motivo}] - Asignada al operador.\n")
             case 4:
-                if conmutador is None:
-                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
+                if sistema is None:
+                    print("El sistema de llamadas no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    nodos = conmutador.peek_frente_fondo()
+                    nodos = sistema.peek_frente_fondo()
                     if nodos is None:
                         print("No hay llamadas en espera en este momento.\n")
                     else:
                         primera, ultima = nodos
                         print(f"Siguiente llamada a ser atendida: [{primera.niss}] | Última llamada recibida: [{ultima.niss}]\n")
             case 5:
-                if conmutador is None:
-                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
+                if sistema is None:
+                    print("El sistema de llamadas no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    cantidad = conmutador.obtenerCantidadEnEspera()
+                    cantidad = sistema.obtenerCantidadEnEspera()
                     print(f"Cantidad de clientes en espera de atención: {cantidad}\n")
             case 6:
-                if conmutador is None:
-                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
+                if sistema is None:
+                    print("El sistema de llamadas no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    if conmutador.estaVacio():
-                        print("El conmutador está libre (No hay llamadas pendientes de atención).\n")
+                    if sistema.estaVacio():
+                        print("La línea está libre (No hay llamadas pendientes de atención).\n")
                     else:
-                        print(f"El conmutador tiene llamadas pendientes (Hay {conmutador.obtenerCantidadEnEspera()} cliente(s) en espera).\n")
+                        print(f"La línea tiene llamadas pendientes (Hay {sistema.obtenerCantidadEnEspera()} cliente(s) en espera).\n")
             case 7:
-                if conmutador is None:
-                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
+                if sistema is None:
+                    print("El sistema de llamadas no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    elementos = conmutador.vaciarCola()
+                    elementos = sistema.vaciarCola()
                     if len(elementos) == 0:
                         print("No hay llamadas en espera en este momento.\n")
                     else:
