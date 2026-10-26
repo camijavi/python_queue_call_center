@@ -19,20 +19,20 @@ from queue import Llamada, ColaCallCenter
 import os 
 
 def main():
-    cola = None
+    conmutador = None
     opcion = 0
     
     while opcion != 8:
-        print("******** Operaciones Sobre Cola (Call Center Disnorte-Dissur) ********")
-        print("1. Crear Cola Vacia")
-        print("2. Encolar Llamada (Registrar NISS)")
-        print("3. Atender Siguiente Llamada (Desencolar)")
-        print("4. Ver Siguiente Llamada en Espera (Visualizar Frente / Fondo)")
-        print("5. Obtener Cantidad en Espera (Size)")
-        print("6. Verificar si la Cola está Vacía (EstaVacio)")
-        print("7. Vaciar Cola")
+        print("******** Centro de Atención Telefónica - Disnorte-Dissur ********")
+        print("1. Iniciar Conmutador de Llamadas")
+        print("2. Registrar Llamada Entrante (Ingreso de NISS)")
+        print("3. Atender Siguiente Llamada")
+        print("4. Consultar Próxima Llamada en Espera")
+        print("5. Consultar Total de Clientes en Espera")
+        print("6. Verificar Estado del Conmutador")
+        print("7. Finalizar Todas las Llamadas en Espera")
         print("8. Salir")
-        print("**********************************************************************")
+        print("*****************************************************************")
         try:
             opcion = int(input("SELECCIONE UNA OPCION: "))
         except ValueError:
@@ -41,66 +41,66 @@ def main():
         
         match opcion:
             case 1:
-                cola = ColaCallCenter()
-                print("Cola vacia creada correctamente.\n")
+                conmutador = ColaCallCenter()
+                print("Conmutador de llamadas iniciado correctamente. Listo para recibir llamadas.\n")
             case 2:
-                if cola is None:
-                    print("La cola no ha sido creada. Debe crearla primero con la opción 1.\n")
+                if conmutador is None:
+                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
                     niss = input("Digite el número NISS del cliente: ").strip()
                     if not niss:
                         print("Error: El número NISS no puede estar vacío.\n")
                     else:
                         llamada = Llamada(niss)
-                        cola.encolarLlamada(llamada)
-                        print(f"Llamada con NISS [{niss}] encolada exitosamente.\n")
+                        conmutador.encolarLlamada(llamada)
+                        print(f"Llamada con NISS [{niss}] registrada exitosamente en espera de atención.\n")
             case 3:
-                if cola is None:
-                    print("La cola no ha sido creada. Debe crearla primero con la opción 1.\n")
+                if conmutador is None:
+                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    llamada = cola.atenderSiguienteLlamada()
+                    llamada = conmutador.atenderSiguienteLlamada()
                     if llamada is None:
-                        print("La cola esta vacia....!\n")
+                        print("No hay llamadas en espera en este momento.\n")
                     else:
-                        print(f"Llamada atendida (Desencolada): [NISS: {llamada.niss} | Motivo: {llamada.motivo}]\n")
+                        print(f"Llamada atendida: [NISS: {llamada.niss} | Motivo: {llamada.motivo}] - Asignada al operador.\n")
             case 4:
-                if cola is None:
-                    print("La cola no ha sido creada. Debe crearla primero con la opción 1.\n")
+                if conmutador is None:
+                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    nodos = cola.peek_frente_fondo()
+                    nodos = conmutador.peek_frente_fondo()
                     if nodos is None:
-                        print("La cola esta vacia....!\n")
+                        print("No hay llamadas en espera en este momento.\n")
                     else:
-                        frente, fondo = nodos
-                        print(f"Frente (Siguiente llamada): [{frente.niss}] | Fondo (Última llamada): [{fondo.niss}]\n")
+                        primera, ultima = nodos
+                        print(f"Siguiente llamada a ser atendida: [{primera.niss}] | Última llamada recibida: [{ultima.niss}]\n")
             case 5:
-                if cola is None:
-                    print("La cola no ha sido creada. Debe crearla primero con la opción 1.\n")
+                if conmutador is None:
+                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    cantidad = cola.obtenerCantidadEnEspera()
-                    print(f"Cantidad de clientes en espera: {cantidad}\n")
+                    cantidad = conmutador.obtenerCantidadEnEspera()
+                    print(f"Cantidad de clientes en espera de atención: {cantidad}\n")
             case 6:
-                if cola is None:
-                    print("La cola no ha sido creada. Debe crearla primero con la opción 1.\n")
+                if conmutador is None:
+                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    if cola.estaVacio():
-                        print("La cola está vacía (No hay personas esperando en el conmutador).\n")
+                    if conmutador.estaVacio():
+                        print("El conmutador está libre (No hay llamadas pendientes de atención).\n")
                     else:
-                        print(f"La cola NO está vacía (Hay {cola.obtenerCantidadEnEspera()} persona(s) esperando en el conmutador).\n")
+                        print(f"El conmutador tiene llamadas pendientes (Hay {conmutador.obtenerCantidadEnEspera()} cliente(s) en espera).\n")
             case 7:
-                if cola is None:
-                    print("La cola no ha sido creada. Debe crearla primero con la opción 1.\n")
+                if conmutador is None:
+                    print("El conmutador no ha sido iniciado. Debe iniciarlo primero con la opción 1.\n")
                 else:
-                    elementos = cola.vaciarCola()
+                    elementos = conmutador.vaciarCola()
                     if len(elementos) == 0:
-                        print("La cola esta vacia....!\n")
+                        print("No hay llamadas en espera en este momento.\n")
                     else:
-                        print("Cola vaciada exitosamente. Llamadas descartadas:")
+                        print("Se han finalizado todas las llamadas en espera. Llamadas despachadas:")
                         for item in elementos:
                             item.print_llamada()
                         print()
             case 8:
-                print("Saliendo del programa...\n")
+                print("Saliendo del sistema de atención...\n")
             case _:
                 print("Opción no válida. Por favor seleccione una opción entre 1 y 8.\n")
 
